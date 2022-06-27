@@ -5,6 +5,7 @@ SRC_DIR = src
 TESTS_DIR = tests
 DIST_DIR = dist
 TMP_DIR = tmp
+COVERAGE_DIR = htmlcov
 
 ##
 # ALL
@@ -45,7 +46,11 @@ test-all:
 	poetry run coverage run -m pytest -rP
 	poetry run coverage report --fail-under=100
 
-.PHONY: lint lint-all test test-all
+coverage:
+	poetry run coverage html -d ${COVERAGE_DIR}
+	open ${COVERAGE_DIR}/index.html
+
+.PHONY: lint lint-all test test-all coverage
 
 
 ##
@@ -87,6 +92,7 @@ clean-packages:
 
 clean:
 	poetry run coverage erase
+	$(call remove_dir,${COVERAGE_DIR},.)
 	$(call remove_dir,${TMP_DIR},.)
 	$(call remove_dir,'__pycache__',.)
 	$(call remove_dir,'.pytest_cache',.)

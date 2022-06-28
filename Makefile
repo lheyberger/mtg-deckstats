@@ -16,6 +16,14 @@ all: install test build clean
 
 
 ##
+# RELEASE
+##
+release: test-all lint-all distclean build clean
+
+.PHONY: all
+
+
+##
 # INSTALL
 ##
 install:

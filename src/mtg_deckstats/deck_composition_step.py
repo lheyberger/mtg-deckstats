@@ -2,18 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import mtg_parser
+from mtg_deckstats.base_step import BaseStep
 
 
 __all__ = ['DeckCompositionStep']
 
 
-class DeckCompositionStep:
-
-    def __init__(self, data=None):
-        self.data = data or {}
+class DeckCompositionStep(BaseStep):
 
     def __call__(self, deck):
-        categories = self.data or self.pre_cache()
+        categories = self.data or self.load_data()
         card_names = set(c.get('name') for c in deck.get('cards', []))
 
         def how_many(category):
@@ -28,7 +26,7 @@ class DeckCompositionStep:
         }
 
     @classmethod
-    def pre_cache(cls):
+    def load_data(cls):
         sources = {
             'wipes': 'https://tappedout.net/mtg-decks/mh-mass-answers/',
             'target': 'https://tappedout.net/mtg-decks/mh-targeted-answers/',

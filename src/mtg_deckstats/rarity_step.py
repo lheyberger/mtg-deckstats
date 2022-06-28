@@ -8,7 +8,7 @@ from mtg_deckstats.utils import yield_cards
 __all__ = ['RarityStep']
 
 
-class RarityStep:
+class RarityStep():
 
     def __call__(self, deck):
 

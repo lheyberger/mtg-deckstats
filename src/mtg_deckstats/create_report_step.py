@@ -5,7 +5,7 @@
 __all__ = ['CreateReportStep']
 
 
-class CreateReportStep:
+class CreateReportStep():
 
     def __call__(self, *args):
         result = {}

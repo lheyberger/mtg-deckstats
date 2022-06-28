@@ -9,7 +9,7 @@ from mtg_deckstats.utils import cleanup_name
 __all__ = ['ParseDeckStep']
 
 
-class ParseDeckStep:
+class ParseDeckStep():
 
     _endpoint_ = 'https://api.scryfall.com/cards/collection'
     _fields_ = [

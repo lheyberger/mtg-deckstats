@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from pprint import pprint
+import time
 import pytest
 import mtg_deckstats
 
 
-@pytest.mark.slow
-@pytest.mark.parametrize('src', [
+sources = [
     (
         'https://aetherhub.com'
         '/Deck/mtg-parser-3-amigos'
@@ -40,9 +40,36 @@ import mtg_deckstats
         'https://decks.tcgplayer.com'
         '/magic/commander/gorila/mtg-parser--3-amigos/1384198'
     ),
-])
-def test_report(src):
+]
+
+
+@pytest.mark.slow
+@pytest.fixture(name='cache', scope='module')
+def fixture_cache():
+    return mtg_deckstats.pre_cache()
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize('src', sources)
+def test_report_no_cache(src):
+
+    start = time.time()
     result = mtg_deckstats.report(src)
+    end = time.time()
 
     assert result
+    pprint(f'Finished test in {round(end - start, 2)}')
+    pprint(result)
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize('src', sources)
+def test_report_cached(src, cache):
+
+    start = time.time()
+    result = mtg_deckstats.report(src, data=cache)
+    end = time.time()
+
+    assert result
+    pprint(f'Finished test (w/ cache) in {round(end - start, 2)}')
     pprint(result)

@@ -18,7 +18,7 @@ all: install test build clean
 ##
 # RELEASE
 ##
-release: test-all lint-all distclean build clean
+release: update test-all lint-all distclean build clean
 
 .PHONY: all
 

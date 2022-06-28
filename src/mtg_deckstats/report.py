@@ -14,19 +14,19 @@ from mtg_deckstats.rarity_step import RarityStep
 from mtg_deckstats.salt_step import SaltStep
 
 
-__all__ = ['report']
+__all__ = ['report', 'pre_cache']
 
 
-def report(src: str) -> dict:
+def report(src: str, data: dict = None) -> dict:
     functions = {
         'parse_deck': ParseDeckStep(src),
         'mana_value': ManaValueStep(),
         'rarity': RarityStep(),
-        'canadian_highlander': CanadianHighlanderStep(),
-        'salt': SaltStep(),
-        'commander_tier': CommanderTierStep(),
-        'deck_composition': DeckCompositionStep(),
-        'combo_potential': ComboPotentialStep(),
+        'canadian_highlander': CanadianHighlanderStep(data=data),
+        'salt': SaltStep(data=data),
+        'commander_tier': CommanderTierStep(data=data),
+        'deck_composition': DeckCompositionStep(data=data),
+        'combo_potential': ComboPotentialStep(data=data),
         'mana_producers': ManaProducersStep(),
         'create_report': CreateReportStep(),
     }
@@ -56,3 +56,16 @@ def report(src: str) -> dict:
     result = results.get('create_report', {})
 
     return {'src': src, **result}
+
+
+def pre_cache():
+    steps = [
+        CanadianHighlanderStep,
+        SaltStep,
+        CommanderTierStep,
+        DeckCompositionStep,
+        ComboPotentialStep,
+    ]
+
+    cache = {step.__name__: step.load_data() for step in steps}
+    return cache

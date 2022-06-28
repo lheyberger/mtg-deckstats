@@ -4,18 +4,16 @@
 import requests
 from bs4 import BeautifulSoup
 from mtg_deckstats.utils import yield_cards
+from mtg_deckstats.base_step import BaseStep
 
 
 __all__ = ['CanadianHighlanderStep']
 
 
-class CanadianHighlanderStep:
-
-    def __init__(self, data=None):
-        self.data = data or {}
+class CanadianHighlanderStep(BaseStep):
 
     def __call__(self, deck):
-        points = self.data or self.pre_cache()
+        points = self.data or self.load_data()
         card_names = [card.get('name') for card in yield_cards(deck)]
         score = sum(v for k, v in points.items() if k in card_names)
         return {
@@ -23,7 +21,7 @@ class CanadianHighlanderStep:
         }
 
     @classmethod
-    def pre_cache(cls):
+    def load_data(cls):
         result = (
             requests
             .get('https://www.canadianhighlander.ca/points-list/')

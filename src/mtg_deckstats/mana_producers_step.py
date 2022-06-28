@@ -7,7 +7,7 @@ import more_itertools
 __all__ = ['ManaProducersStep']
 
 
-class ManaProducersStep:
+class ManaProducersStep():
 
     def __call__(self, deck):
         producers = deck.get('cards', [])

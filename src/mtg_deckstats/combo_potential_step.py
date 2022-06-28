@@ -5,18 +5,16 @@ from functools import reduce
 from operator import itemgetter
 import csv
 import requests
+from mtg_deckstats.base_step import BaseStep
 
 
 __all__ = ['ComboPotentialStep']
 
 
-class ComboPotentialStep:
-
-    def __init__(self, data=None):
-        self.data = data or {}
+class ComboPotentialStep(BaseStep):
 
     def __call__(self, deck):
-        combos = self.data or self.pre_cache()
+        combo_list = self.data or self.load_data()
 
         cards = deck.get('cards', [])
         card_names = set(card.get('name') for card in cards)
@@ -30,28 +28,30 @@ class ComboPotentialStep:
         ).lower()
         color_identity_filter = set('wubrg') - set(color_identity)
 
-        combos = (
-            c for c in combos
+        combo_list = (
+            c for c in combo_list
             if not color_identity_filter & set(c['ci'])
         )
-        combos = (
-            c for c in combos
+        combo_list = (
+            c for c in combo_list
             if c['cards'] <= card_names
         )
-        combos = list(combos)
 
-        for combo in combos:
+        combos = []
+        for combo in combo_list:
             combo_cards = list(
                 c for c in cards
                 if c.get('name') in combo.get('cards')
             )
-            combo['cards'] = combo_cards
-            combo['cmc'] = sum(c.get('cmc', 0) for c in combo_cards)
-            combo['nb'] = len(combo_cards)
-            combo['cmdr'] = any(
-                c for c in combo_cards
-                if 'commander' in c.get('tags', ())
-            )
+            combos.append({
+                'cards': combo_cards,
+                'cmc': sum(c.get('cmc', 0) for c in combo_cards),
+                'nb': len(combo_cards),
+                'cmdr': any(
+                    c for c in combo_cards
+                    if 'commander' in c.get('tags', ())
+                ),
+            })
 
         combos = sorted(combos, key=itemgetter('cmc'))
         combos = sorted(combos, key=itemgetter('cmdr'), reverse=True)
@@ -87,7 +87,7 @@ class ComboPotentialStep:
         return max(combo_levels, default=0)
 
     @classmethod
-    def pre_cache(cls):
+    def load_data(cls):
         url = (
             'https://docs.google.com/spreadsheets/d/'
             '1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/export'
@@ -103,7 +103,7 @@ class ComboPotentialStep:
         tsv_file = csv.reader(lines, delimiter='\t')
         lines = list(tsv_file)
 
-        combos = []
+        combo_list = []
         for line in lines[1:]:
             if not line[17] or not line[11]:
                 continue
@@ -111,9 +111,9 @@ class ComboPotentialStep:
             cards = set(line[1:10])
             cards.discard('')
 
-            combos.append({
+            combo_list.append({
                 'cards': cards,
                 'ci': ''.join(set('wubrg') & set(line[11])),
             })
 
-        return combos
+        return combo_list

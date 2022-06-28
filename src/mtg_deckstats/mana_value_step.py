@@ -8,7 +8,7 @@ from mtg_deckstats.utils import yield_cards
 __all__ = ['ManaValueStep']
 
 
-class ManaValueStep:
+class ManaValueStep():
 
     def __call__(self, deck):
         cmcs = []

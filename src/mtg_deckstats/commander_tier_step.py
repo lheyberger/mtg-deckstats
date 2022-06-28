@@ -3,18 +3,16 @@
 
 import mtg_parser
 from mtg_deckstats.utils import cleanup_name
+from mtg_deckstats.base_step import BaseStep
 
 
 __all__ = ['CommanderTierStep']
 
 
-class CommanderTierStep:
-
-    def __init__(self, data=None):
-        self.data = data or {}
+class CommanderTierStep(BaseStep):
 
     def __call__(self, deck):
-        cmdrs, tiers, default = self.data or self.pre_cache()
+        cmdrs, tiers, default = self.data or self.load_data()
 
         power = deck.get('cards', [])
         power = filter(lambda c: 'commander' in c.get('tags', ()), power)
@@ -28,7 +26,7 @@ class CommanderTierStep:
         }
 
     @classmethod
-    def pre_cache(cls):
+    def load_data(cls):
         cmdrs = mtg_parser.parse_deck(
             'https://tappedout.net/'
             'mtg-decks/best-commanders-in-edh-tier-list/'

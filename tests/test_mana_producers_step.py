@@ -43,7 +43,7 @@ from .utils import assert_objects_are_equal
 def test_mana_producers_step_call(cards, expected):
 
     step = ManaProducersStep()
-    
+
     result = step({'cards': cards})
 
     assert_objects_are_equal(result, expected)

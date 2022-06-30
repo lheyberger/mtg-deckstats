@@ -33,7 +33,7 @@ class CommanderTierStep(BaseStep):
         )
 
         cmdrs = dict(map(lambda c: (c.name, ' '.join(c.tags)), cmdrs))
-        tiers = sorted(set(cmdrs.values()))
+        tiers = sorted(set(value for value in cmdrs.values() if value))
         default = tiers[-1]
 
         return cmdrs, tiers, default

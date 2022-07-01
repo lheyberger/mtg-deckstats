@@ -9,7 +9,7 @@ def test_run_graph():
     functions = {
         'return_1': lambda: 1,
         'return_2': lambda: 2,
-        'sum': lambda x,y: x+y,
+        'sum': lambda x, y: x + y,
     }
     dependencies = {
         'return_1': [],

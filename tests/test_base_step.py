@@ -18,7 +18,7 @@ def test_load_data_default():
 
     step = BaseStep()
 
-    assert step.load_data() == None
+    assert step.load_data() is None
 
 
 def test_load_data_overload():
@@ -28,7 +28,6 @@ def test_load_data_overload():
         @classmethod
         def load_data(cls):
             return 42
-
 
     step = TestStep()
 

@@ -105,7 +105,7 @@ class ComboPotentialStep(BaseStep):
 
         combo_list = []
         for line in lines[1:]:
-            if not line[17] or not line[11]:
+            if not line[17]:
                 continue
 
             cards = set(line[1:10])

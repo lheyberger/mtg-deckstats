@@ -18,8 +18,8 @@ class DeckCompositionStep(BaseStep):
             return len(card_names & categories.get(category, set()))
 
         return {
-            'board_wipes': how_many('wipes'),
-            'target_answers': how_many('target'),
+            'board_wipes': how_many('board_wipes'),
+            'target_answers': how_many('target_answers'),
             'steady_draw': how_many('steady_draw'),
             'burst_draw': how_many('burst_draw'),
             'tutors': how_many('tutors'),
@@ -28,11 +28,16 @@ class DeckCompositionStep(BaseStep):
     @classmethod
     def load_data(cls):
         sources = {
-            'wipes': 'https://tappedout.net/mtg-decks/mh-mass-answers/',
-            'target': 'https://tappedout.net/mtg-decks/mh-targeted-answers/',
-            'steady_draw': 'https://tappedout.net/mtg-decks/mh-draw-s/',
-            'burst_draw': 'https://tappedout.net/mtg-decks/mh-draw-b/',
-            'tutors': 'https://tappedout.net/mtg-decks/mh-tutors/',
+            'board_wipes':
+                'https://tappedout.net/mtg-decks/mh-mass-answers/',
+            'target_answers':
+                'https://tappedout.net/mtg-decks/mh-targeted-answers/',
+            'steady_draw':
+                'https://tappedout.net/mtg-decks/mh-draw-s/',
+            'burst_draw':
+                'https://tappedout.net/mtg-decks/mh-draw-b/',
+            'tutors':
+                'https://tappedout.net/mtg-decks/mh-tutors/',
         }
         return {
             cat: set(card.name for card in mtg_parser.parse_deck(src))

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pprint import pprint
-import time
 import pytest
 import mtg_deckstats
 from .utils import assert_objects_are_equal
@@ -54,26 +52,18 @@ def fixture_cache():
 @pytest.mark.parametrize('src', sources)
 def test_slow_report_no_cache(src):
 
-    start = time.time()
     result = mtg_deckstats.report.compute(src)
-    end = time.time()
 
     assert result
-    pprint(f'Finished test in {round(end - start, 2)}')
-    pprint(result)
 
 
 @pytest.mark.slow
 @pytest.mark.parametrize('src', sources)
 def test_slow_report_cached(src, cache):
 
-    start = time.time()
     result = mtg_deckstats.report.compute(src, data=cache)
-    end = time.time()
 
     assert result
-    pprint(f'Finished test (w/ cache) in {round(end - start, 2)}')
-    pprint(result)
 
 
 @pytest.mark.parametrize('src', sources)

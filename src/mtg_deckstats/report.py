@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from mtg_deckstats.run_graph import run_graph
+from mtg_deckstats.graph import run_graph
 from mtg_deckstats.canadian_highlander_step import CanadianHighlanderStep
 from mtg_deckstats.combo_potential_step import ComboPotentialStep
 from mtg_deckstats.commander_tier_step import CommanderTierStep
@@ -14,10 +14,10 @@ from mtg_deckstats.rarity_step import RarityStep
 from mtg_deckstats.salt_step import SaltStep
 
 
-__all__ = ['report', 'pre_cache']
+__all__ = ['compute', 'pre_cache']
 
 
-def report(src: str, data: dict = None) -> dict:
+def compute(src: str, data: dict = None) -> dict:
     functions = {
         'parse_deck': ParseDeckStep(src),
         'mana_value': ManaValueStep(),

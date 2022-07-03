@@ -46,3 +46,4 @@ def test_call_no_cache(cards, combo_density):
     result = step({'cards': cards})
 
     assert result['combos_density'] == combo_density
+    assert result['combos_level'] >= 0 and result['combos_level'] <= 9

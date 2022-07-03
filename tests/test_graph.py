@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from mtg_deckstats.run_graph import run_graph
+from mtg_deckstats.graph import run_graph
 
 
-def test_run_graph():
+def test_run():
 
     functions = {
         'return_1': lambda: 1,

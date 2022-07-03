@@ -34,7 +34,8 @@ class ParseDeckStep():
         for batch in (cards[:half], cards[half:]):
             identifiers = [{'name': cleanup_name(card.name)} for card in batch]
             payload = {'identifiers': identifiers}
-            j = requests.post(self._endpoint_, json=payload).json()
+            response = requests.post(self._endpoint_, json=payload)
+            j = response.json()
             new_cardlist.extend(map(
                 lambda c: {k: v for (k, v) in c.items() if k in self._fields_},
                 j.get('data', [])

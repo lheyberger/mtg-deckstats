@@ -45,14 +45,14 @@ sources = [
 @pytest.mark.slow
 @pytest.fixture(name='cache', scope='module')
 def fixture_cache():
-    return mtg_deckstats.report.pre_cache()
+    return mtg_deckstats.pre_cache()
 
 
 @pytest.mark.slow
 @pytest.mark.parametrize('src', sources)
 def test_slow_report_no_cache(src):
 
-    result = mtg_deckstats.report.compute(src)
+    result = mtg_deckstats.compute(src)
 
     assert result
 
@@ -61,7 +61,7 @@ def test_slow_report_no_cache(src):
 @pytest.mark.parametrize('src', sources)
 def test_slow_report_cached(src, cache):
 
-    result = mtg_deckstats.report.compute(src, data=cache)
+    result = mtg_deckstats.compute(src, data=cache)
 
     assert result
 
@@ -81,7 +81,7 @@ def test_report(monkeypatch, src):
         mock_run_graph,
     )
 
-    result = mtg_deckstats.report.compute(src)
+    result = mtg_deckstats.compute(src)
 
     assert_objects_are_equal(
         {'src': src, **mock_result},
@@ -104,6 +104,6 @@ def test_pre_cache(monkeypatch):
             lambda step=step: step
         )
 
-    result = mtg_deckstats.report.pre_cache()
+    result = mtg_deckstats.pre_cache()
 
     assert set(steps) == set(result.values())

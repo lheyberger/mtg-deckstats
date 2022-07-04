@@ -16,8 +16,21 @@ Generate a deckstats report using the following steps:
 
 	import mtg_deckstats
 	
-	report = mtg_deckstats.report('<decklist url>')
+	report = mtg_deckstats.compute('<decklist url>')
 	print(report)
+
+
+To speed things up, you can also compute reports with a pre-generated cache using the following steps:
+
+	import mtg_deckstats
+
+	cache = mtg_deckstats.pre_cache()
+
+	report_1 = mtg_deckstats.compute('<decklist url 1>', data=cache)
+	print(report_1)
+
+	report_2 = mtg_deckstats.compute('<decklist url 2>', data=cache)
+	print(report_2)
 
 
 ## Supported deckbuilding websites

@@ -3,7 +3,7 @@
 
 import pytest
 from mtg_deckstats.commander_tier_step import CommanderTierStep
-from .utils import mock_response
+from .utils import mock_responses
 
 
 @pytest.mark.parametrize('commanders', [[
@@ -16,10 +16,14 @@ from .utils import mock_response
 ]])
 def test_load_data(requests_mock, commanders):
 
-    mock_response(
+    mock_responses(
         requests_mock,
+        'GET',
         r'https://tappedout.net/',
-        'tappedout_commander_tiers'
+        [
+            'tappedout_commander_tiers_1',
+            'tappedout_commander_tiers_2',
+        ],
     )
 
     cmdrs, tiers, default = CommanderTierStep.load_data()
@@ -42,10 +46,14 @@ def test_load_data(requests_mock, commanders):
 ])
 def test_call_no_cache(requests_mock, cards):
 
-    mock_response(
+    mock_responses(
         requests_mock,
+        'GET',
         r'https://tappedout.net/',
-        'tappedout_commander_tiers'
+        [
+            'tappedout_commander_tiers_1',
+            'tappedout_commander_tiers_2',
+        ],
     )
 
     step = CommanderTierStep()

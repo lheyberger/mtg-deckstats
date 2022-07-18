@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import mtg_parser
+from more_itertools import flatten
 from mtg_deckstats.utils import cleanup_name
 from mtg_deckstats.base_step import BaseStep
 
@@ -27,11 +28,18 @@ class CommanderTierStep(BaseStep):
 
     @classmethod
     def load_data(cls):
-        cmdrs = mtg_parser.parse_deck(
-            'https://tappedout.net/'
-            'mtg-decks/best-commanders-in-edh-tier-list/'
-        )
-
+        sources = [
+            (
+                'https://tappedout.net/'
+                'mtg-decks/best-commanders-in-edh-tier-list-part-1/'
+            ),
+            (
+                'https://tappedout.net/'
+                'mtg-decks/best-commanders-in-edh-tier-list-part-2/'
+            ),
+        ]
+        decks = map(mtg_parser.parse_deck, sources)
+        cmdrs = flatten(decks)
         cmdrs = dict(map(lambda c: (c.name, ' '.join(c.tags)), cmdrs))
         tiers = sorted(set(value for value in cmdrs.values() if value))
         default = tiers[-1]

@@ -3,7 +3,6 @@
 
 from functools import reduce
 from operator import itemgetter
-import csv
 import requests
 from mtg_deckstats.base_step import BaseStep
 
@@ -98,13 +97,13 @@ class ComboPotentialStep(BaseStep):
             .get(url)
             .content
             .decode('utf-8')
-            .splitlines()
+            .split('\r\n')
         )
-        tsv_file = csv.reader(lines, delimiter='\t')
-        lines = list(tsv_file)
+        lines = [line.split('\t') for line in lines]
+        lines = lines[1:]
 
         combo_list = []
-        for line in lines[1:]:
+        for line in lines:
             if not line[17]:
                 continue
 

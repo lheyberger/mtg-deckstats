@@ -6,8 +6,7 @@ from mtg_deckstats.combo_potential_step import ComboPotentialStep
 from .utils import mock_response
 
 
-@pytest.fixture(scope='module')
-def mock_combos(requests_mock):
+def _mock_combos(requests_mock):
     mock_response(
         requests_mock,
         'https://docs.google.com',
@@ -19,7 +18,10 @@ def mock_combos(requests_mock):
     ('ub', 'Demonic Consultation', "Thassa's Oracle"),
     ('ru', 'Deadeye Navigator', 'Dockside Extortionist'),
 ]])
-def test_load_data(combos):
+def test_load_data(requests_mock, combos):
+
+    _mock_combos(requests_mock)
+
     result = ComboPotentialStep.load_data()
 
     for combo in combos:
@@ -39,7 +41,9 @@ def test_load_data(combos):
     ],
     2
 ]])
-def test_call_no_cache(cards, combo_density):
+def test_call_no_cache(requests_mock, cards, combo_density):
+
+    _mock_combos(requests_mock)
 
     step = ComboPotentialStep()
 

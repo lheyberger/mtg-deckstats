@@ -5,4 +5,4 @@ from mtg_deckstats.rank import * # noqa
 from mtg_deckstats.report import * # noqa
 
 
-__version__ = '0.0.1-alpha.3'
+__version__ = '0.0.1-alpha.4'

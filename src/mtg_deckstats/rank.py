@@ -5,7 +5,7 @@ from mtg_deckstats.report import compute
 
 
 __all__ = ['rank_source', 'rank_report']
-__version__ = '0.0.1-alpha.3'
+__version__ = '0.0.1-alpha.4'
 
 
 def rank_source(src: str, data: dict = None) -> dict:

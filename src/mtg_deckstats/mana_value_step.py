@@ -5,7 +5,7 @@ import statistics
 from mtg_deckstats.utils import yield_cards
 
 
-__all__ = ['ManaValueStep']
+__all__ = []
 
 
 class ManaValueStep():

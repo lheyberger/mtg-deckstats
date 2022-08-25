@@ -5,7 +5,7 @@ import mtg_parser
 from mtg_deckstats.base_step import BaseStep
 
 
-__all__ = ['DeckCompositionStep']
+__all__ = []
 
 
 class DeckCompositionStep(BaseStep):

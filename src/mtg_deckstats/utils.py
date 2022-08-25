@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-__all__ = ['cleanup_name', 'yield_cards']
+__all__ = []
 
 
 def cleanup_name(name):

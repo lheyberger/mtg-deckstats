@@ -5,7 +5,7 @@ from collections import Counter
 from mtg_deckstats.utils import yield_cards
 
 
-__all__ = ['RarityStep']
+__all__ = []
 
 
 class RarityStep():

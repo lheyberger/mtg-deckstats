@@ -6,7 +6,7 @@ import mtg_parser
 from mtg_deckstats.utils import cleanup_name
 
 
-__all__ = ['ParseDeckStep']
+__all__ = []
 
 
 class ParseDeckStep():

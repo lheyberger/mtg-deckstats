@@ -4,7 +4,7 @@
 import more_itertools
 
 
-__all__ = ['ManaProducersStep']
+__all__ = []
 
 
 class ManaProducersStep():

@@ -7,7 +7,7 @@ from mtg_deckstats.utils import cleanup_name
 from mtg_deckstats.base_step import BaseStep
 
 
-__all__ = ['CommanderTierStep']
+__all__ = []
 
 
 class CommanderTierStep(BaseStep):

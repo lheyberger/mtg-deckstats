@@ -7,7 +7,7 @@ from mtg_deckstats.utils import yield_cards
 from mtg_deckstats.base_step import BaseStep
 
 
-__all__ = ['CanadianHighlanderStep']
+__all__ = []
 
 
 class CanadianHighlanderStep(BaseStep):

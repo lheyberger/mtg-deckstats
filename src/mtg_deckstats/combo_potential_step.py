@@ -7,7 +7,7 @@ import requests
 from mtg_deckstats.base_step import BaseStep
 
 
-__all__ = ['ComboPotentialStep']
+__all__ = []
 
 
 class ComboPotentialStep(BaseStep):

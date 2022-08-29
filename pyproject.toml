@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "mtg_deckstats"
-version = "0.0.1-alpha.5"
+version = "0.0.1-alpha.6"
 license = "MIT"
 description = "Magic: the Gathering deckstats"
 readme = "README.md"
@@ -19,7 +19,7 @@ documentation = "https://github.com/lheyberger/mtg-deckstats"
 python = "^3.7"
 requests = "^2.25.1"
 beautifulsoup4 = "^4.9.3"
-mtg-parser = "^0.0.1-alpha.25"
+mtg-parser = "^0.0.1-alpha.26"
 more-itertools = "^8.13.0"
 
 

@@ -20,11 +20,13 @@ def mock_response(requests_mock, pattern, response, basedir='tests/mocks'):
         matcher = re.compile(pattern)
         with open(path, 'r', encoding='utf-8', newline='') as file:
             requests_mock.get(matcher, text=file.read())
+        requests_mock.head(matcher, status_code=200)
 
 
 def mock_responses(
         requests_mock,
-        verb, pattern,
+        verb,
+        pattern,
         responses,
         basedir='tests/mocks',
         ):
@@ -35,3 +37,4 @@ def mock_responses(
             response_list.append({'text': file.read()})
     matcher = re.compile(pattern)
     requests_mock.register_uri(verb, matcher, response_list)
+    requests_mock.head(matcher, status_code=200)

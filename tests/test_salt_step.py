@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
 import pytest
 from mtg_deckstats.salt_step import SaltStep
 
@@ -17,7 +18,7 @@ def test_salt_step_load_data_with_salt(requests_mock, card_name, salt_score):
     }]
 
     requests_mock.get(
-        'https://json.edhrec.com/top/salt.json',
+        re.compile('https://json.edhrec.com/'),
         json={
             'container': {
                 'json_dict': {
@@ -46,7 +47,7 @@ def test_salt_step_load_data_with_label(requests_mock, card_name, salt_score):
     }]
 
     requests_mock.get(
-        'https://json.edhrec.com/top/salt.json',
+        re.compile('https://json.edhrec.com/'),
         json={
             'container': {
                 'json_dict': {
@@ -75,7 +76,7 @@ def test_salt_step_load_data_with_label(requests_mock, card_name, salt_score):
 def test_salt_step_call_no_cache(requests_mock, cards, salt_score):
 
     requests_mock.get(
-        'https://json.edhrec.com/top/salt.json',
+        re.compile('https://json.edhrec.com/'),
         json={
             'container': {
                 'json_dict': {
@@ -91,3 +92,10 @@ def test_salt_step_call_no_cache(requests_mock, cards, salt_score):
     result = step({'cards': cards})
 
     assert round(result['salt_score'], 2) == round(salt_score, 2)
+
+
+@pytest.mark.slow
+def test_salt_step_load_data():
+    salt_score = SaltStep.load_data()
+
+    assert len(salt_score) > 0

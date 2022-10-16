@@ -26,7 +26,7 @@ class SaltStep(BaseStep):
     def load_data(cls):
         cardlists = (
             requests
-            .get('https://json.edhrec.com/top/salt.json')
+            .get('https://json.edhrec.com/pages/top/salt-2021.json')
             .json()
             .get('container', {})
             .get('json_dict', {})

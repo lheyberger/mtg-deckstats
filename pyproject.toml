@@ -19,7 +19,7 @@ documentation = "https://github.com/lheyberger/mtg-deckstats"
 python = "^3.7"
 requests = "^2.25.1"
 beautifulsoup4 = "^4.9.3"
-mtg-parser = "^0.0.1-alpha.26"
+mtg-parser = "^0.0.1-alpha.28"
 more-itertools = "^8.13.0"
 
 

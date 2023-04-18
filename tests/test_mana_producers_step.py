@@ -33,7 +33,7 @@ from .utils import assert_objects_are_equal
     [
         [
             {'produced_mana': 'g', 'type_line': 'Basic Land'},
-            {'produced_mana': 'w', 'type_line': 'Basic Land'},
+            {'produced_mana': 'w', 'type_line': 'Land'},
             {'produced_mana': 'g'},
             {'produced_mana': 'w'},
         ],

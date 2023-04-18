@@ -62,3 +62,23 @@ def test_call_no_cache(requests_mock, cards, score):
     result = step({'cards': cards})
 
     assert result['canadian_highlander_score'] == score
+
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize('cards', [
+    [
+        {'name': 'Sol Ring'},
+        {'name': 'Mana Crypt'},
+        {'name': 'Vampiric Tutor'},
+    ],
+])
+def test_slow_load_data(cards):
+
+    result = CanadianHighlanderStep.load_data()
+
+    assert result
+    for card in cards:
+        assert result[card.get('name')] > 0
+
+    return result

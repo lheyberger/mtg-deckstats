@@ -42,19 +42,9 @@ sources = [
 ]
 
 
-@pytest.mark.slow
-@pytest.fixture(name='cache', scope='module')
-def fixture_cache():
+@pytest.fixture(scope='module')
+def cache():
     return mtg_deckstats.pre_cache()
-
-
-@pytest.mark.slow
-@pytest.mark.parametrize('src', sources)
-def test_slow_report_no_cache(src):
-
-    result = mtg_deckstats.compute(src)
-
-    assert result
 
 
 @pytest.mark.slow
@@ -66,8 +56,28 @@ def test_slow_report_cached(src, cache):
     assert result
 
 
+def test_patched_pre_cache(monkeypatch):
+
+    steps = [
+        'canadian_highlander_step.CanadianHighlanderStep',
+        'salt_step.SaltStep',
+        'commander_tier_step.CommanderTierStep',
+        'deck_composition_step.DeckCompositionStep',
+        'combo_potential_step.ComboPotentialStep'
+    ]
+    for step in steps:
+        monkeypatch.setattr(
+            f'mtg_deckstats.{step}.load_data',
+            lambda step=step: step
+        )
+
+    result = mtg_deckstats.pre_cache()
+
+    assert set(steps) == set(result.values())
+
+
 @pytest.mark.parametrize('src', sources)
-def test_report(monkeypatch, src):
+def test_patched_report(monkeypatch, src):
 
     mock_result = {'test_step': 42}
 
@@ -87,23 +97,3 @@ def test_report(monkeypatch, src):
         {'src': src, **mock_result},
         {'src': src, **result}
     )
-
-
-def test_pre_cache(monkeypatch):
-
-    steps = [
-        'canadian_highlander_step.CanadianHighlanderStep',
-        'salt_step.SaltStep',
-        'commander_tier_step.CommanderTierStep',
-        'deck_composition_step.DeckCompositionStep',
-        'combo_potential_step.ComboPotentialStep'
-    ]
-    for step in steps:
-        monkeypatch.setattr(
-            f'mtg_deckstats.{step}.load_data',
-            lambda step=step: step
-        )
-
-    result = mtg_deckstats.pre_cache()
-
-    assert set(steps) == set(result.values())

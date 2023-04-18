@@ -6,17 +6,7 @@ import pytest
 from mtg_deckstats.salt_step import SaltStep
 
 
-@pytest.mark.parametrize('card_name, salt_score', [
-    ['Sol Ring', 42],
-    ['Mana Crypt', 42.42],
-])
-def test_salt_step_load_data_with_salt(requests_mock, card_name, salt_score):
-
-    cards = [{
-        'name': card_name,
-        'salt': salt_score,
-    }]
-
+def _mock_api_call(requests_mock, cards):
     requests_mock.get(
         re.compile('https://json.edhrec.com/'),
         json={
@@ -29,6 +19,18 @@ def test_salt_step_load_data_with_salt(requests_mock, card_name, salt_score):
             }
         }
     )
+
+
+@pytest.mark.parametrize('card_name, salt_score', [
+    ['Sol Ring', 42],
+    ['Mana Crypt', 42.42],
+])
+def test_salt_step_load_data_with_salt(requests_mock, card_name, salt_score):
+
+    _mock_api_call(requests_mock, [{
+        'name': card_name,
+        'salt': salt_score,
+    }])
 
     result = SaltStep.load_data()
 
@@ -41,23 +43,10 @@ def test_salt_step_load_data_with_salt(requests_mock, card_name, salt_score):
 ])
 def test_salt_step_load_data_with_label(requests_mock, card_name, salt_score):
 
-    cards = [{
+    _mock_api_call(requests_mock, [{
         'name': card_name,
         'label': f'salt score {salt_score}',
-    }]
-
-    requests_mock.get(
-        re.compile('https://json.edhrec.com/'),
-        json={
-            'container': {
-                'json_dict': {
-                    'cardlists': [{
-                        'cardviews': cards
-                    }]
-                }
-            }
-        }
-    )
+    }])
 
     result = SaltStep.load_data()
 
@@ -75,18 +64,7 @@ def test_salt_step_load_data_with_label(requests_mock, card_name, salt_score):
 ])
 def test_salt_step_call_no_cache(requests_mock, cards, salt_score):
 
-    requests_mock.get(
-        re.compile('https://json.edhrec.com/'),
-        json={
-            'container': {
-                'json_dict': {
-                    'cardlists': [{
-                        'cardviews': cards
-                    }]
-                }
-            }
-        }
-    )
+    _mock_api_call(requests_mock, cards)
 
     step = SaltStep()
     result = step({'cards': cards})

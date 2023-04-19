@@ -6,7 +6,7 @@ from mtg_deckstats.deck_composition_step import DeckCompositionStep
 from .utils import assert_objects_are_equal, mock_response
 
 
-categories = [
+_categories = [
     {
         'name': 'board_wipes',
         'pattern': 'mh-mass-answers',
@@ -55,13 +55,18 @@ categories = [
 ]
 
 
-@pytest.fixture(scope='module')
-def mock_categories(requests_mock):
+def _mock_api_call(requests_mock, categories):
     for category in categories:
         mock_response(requests_mock, category['pattern'], category['response'])
 
 
-def test_load_data():
+@pytest.mark.parametrize('categories', [
+    _categories,
+])
+def test_load_data(requests_mock, categories):
+
+    _mock_api_call(requests_mock, categories)
+
     result = DeckCompositionStep.load_data()
 
     for category in categories:
@@ -69,7 +74,8 @@ def test_load_data():
             assert card in result[category['name']]
 
 
-@pytest.mark.parametrize('cards, expected', [[
+@pytest.mark.parametrize('categories, cards, expected', [[
+    _categories,
     [
         {'name': 'Austere Command'},
         {'name': 'Wrath of God'},
@@ -86,7 +92,9 @@ def test_load_data():
         'tutors': 1,
     }
 ]])
-def test_call_no_cache(cards, expected):
+def test_call_no_cache(requests_mock, categories, cards, expected):
+
+    _mock_api_call(requests_mock, categories)
 
     step = DeckCompositionStep()
 

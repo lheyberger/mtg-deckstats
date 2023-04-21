@@ -12,6 +12,10 @@ Then, clone the repository and run:
 
 ## Run tests
 
+If the cache format changed, make sure to update the pre_cache.pkl file in the mock folder:
+
+	$ poetry run pre_cache tests/mocks/pre_cache.pkl
+
 For fast iteration, run:
 
 	$ make test

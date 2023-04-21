@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from mtg_deckstats.report import compute
+from mtg_deckstats.__version__ import __version__
 
 
 __all__ = ['rank_source', 'rank_report']
-__version__ = '0.0.1-alpha.7'
 
 
 def rank_source(src: str, data: dict = None) -> dict:

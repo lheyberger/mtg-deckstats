@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pickle
 import pytest
 import mtg_deckstats
-from .utils import assert_objects_are_equal
+from .utils import assert_objects_are_equal, mock_response, mock_responses
 
 
 sources = [
@@ -43,13 +44,22 @@ sources = [
 
 
 @pytest.fixture(scope='module')
-def cache():
+def slow_cache():
     return mtg_deckstats.pre_cache()
+
+
+@pytest.fixture(scope='module')
+def fast_cache():
+    try:
+        with open('tests/mocks/pre_cache.pkl', 'rb') as f:
+            return pickle.load(f)
+    except:
+        pytest.fail(reason='Please follow instructions in CONTRIBUTING.md')
 
 
 @pytest.mark.slow
 @pytest.mark.parametrize('src', sources)
-def test_slow_report_cached(src, cache):
+def test_slow_report_cached(src, slow_cache):
 
     result = mtg_deckstats.compute(src, data=cache)
 
@@ -73,7 +83,7 @@ def test_patched_pre_cache(monkeypatch):
 
     result = mtg_deckstats.pre_cache()
 
-    assert set(steps) == set(result.values())
+    assert set(steps) <= set(result.values())
 
 
 @pytest.mark.parametrize('src', sources)
@@ -97,3 +107,32 @@ def test_patched_report(monkeypatch, src):
         {'src': src, **mock_result},
         {'src': src, **result}
     )
+
+
+@pytest.mark.parametrize('deck', [
+    {
+        'url': 'https://www.moxfield.com/decks/Agzx8zsi5UezWBUX5hMJPQ',
+        'pattern': r'https://.*?moxfield.com',
+        'mock': 'mock_moxfield_Agzx8zsi5UezWBUX5hMJPQ',
+        'scryfall_pattern': r'https://api.scryfall.com/cards/collection',
+        'scryfall_mocks': [
+            'scryfall_moxfield_Agzx8zsi5UezWBUX5hMJPQ_1',
+            'scryfall_moxfield_Agzx8zsi5UezWBUX5hMJPQ_2'
+        ],
+    },
+])
+def test_pre_cached_compute(requests_mock, fast_cache, deck):
+    mock_response(
+        requests_mock,
+        deck['pattern'],
+        deck['mock']
+    )
+    mock_responses(
+        requests_mock,
+        'POST',
+        deck['scryfall_pattern'],
+        deck['scryfall_mocks']
+    )
+
+    result = mtg_deckstats.compute(deck['url'], data=fast_cache)
+    assert result

@@ -33,7 +33,7 @@ class ComboPotentialStep(BaseStep):
         )
         combo_list = (
             c for c in combo_list
-            if c['cards'] <= card_names
+            if set(c['cards']) <= card_names
         )
 
         combos = []
@@ -111,7 +111,7 @@ class ComboPotentialStep(BaseStep):
             cards.discard('')
 
             combo_list.append({
-                'cards': cards,
+                'cards': list(cards),
                 'ci': ''.join(set('wubrg') & set(line[11])),
             })
 

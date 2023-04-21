@@ -27,7 +27,7 @@ def test_load_data(requests_mock, combos):
     for combo in combos:
         combo_list = result
         combo_list = (c for c in combo_list if set(c['ci']) == set(combo[0]))
-        combo_list = (c for c in combo_list if c['cards'] == set(combo[1:]))
+        combo_list = (c for c in combo_list if set(c['cards']) == set(combo[1:]))
         combo_list = list(combo_list)
         assert len(combo_list) == 1
 
@@ -65,7 +65,7 @@ def test_slow_load_data(combos):
     for combo in combos:
         combo_list = result
         combo_list = (c for c in combo_list if set(c['ci']) == set(combo[0]))
-        combo_list = (c for c in combo_list if c['cards'] == set(combo[1:]))
+        combo_list = (c for c in combo_list if set(c['cards']) == set(combo[1:]))
         combo_list = list(combo_list)
         assert len(combo_list) == 1
 

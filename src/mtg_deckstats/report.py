@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from mtg_deckstats.__version__ import __version__
 from mtg_deckstats.graph import run_graph
 from mtg_deckstats.canadian_highlander_step import CanadianHighlanderStep
 from mtg_deckstats.combo_potential_step import ComboPotentialStep
@@ -68,4 +69,5 @@ def pre_cache():
     ]
 
     cache = {step.__name__: step.load_data() for step in steps}
+    cache['version'] = __version__
     return cache

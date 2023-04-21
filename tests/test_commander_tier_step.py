@@ -28,12 +28,7 @@ def test_load_data(requests_mock, commanders):
 
     _mock_api_call(requests_mock)
 
-    cmdrs, tiers, default = CommanderTierStep.load_data()
-
-    cmdr_tiers = set(cmdrs.values())
-    assert default in tiers
-    for tier in tiers:
-        assert tier in cmdr_tiers
+    cmdrs = CommanderTierStep.load_data()
     for commander in commanders:
         assert commander in cmdrs
 
@@ -79,11 +74,7 @@ def test_call_no_cache_two_commanders(requests_mock, cards):
 ]])
 def test_slow_load_data(commanders):
 
-    cmdrs, tiers, default = CommanderTierStep.load_data()
+    cmdrs = CommanderTierStep.load_data()
 
-    cmdr_tiers = set(cmdrs.values())
-    assert default in tiers
-    for tier in tiers:
-        assert tier in cmdr_tiers
     for commander in commanders:
         assert commander in cmdrs

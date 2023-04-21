@@ -13,14 +13,13 @@ __all__ = []
 class CommanderTierStep(BaseStep):
 
     def __call__(self, deck):
-        cmdrs, tiers, default = self.data or self.load_data()
+        cmdrs = self.data or self.load_data()
 
-        power = deck.get('cards', [])
-        power = filter(lambda c: 'commander' in c.get('tags', ()), power)
-        power = map(lambda c: cleanup_name(c.get('name')), power)
-        power = map(lambda name: cmdrs.get(name, default), power)
-        power = map(lambda t: max(9 - tiers.index(t), 0), power)
-        power = max(power)
+        cards = deck.get('cards', [])
+        commanders = filter(lambda c: 'commander' in c.get('tags', ()), cards)
+        names = map(lambda c: cleanup_name(c.get('name')), commanders)
+        powers = map(lambda name: cmdrs.get(name, 0), names)
+        power = max(powers)
 
         return {
             'commander_power_tier': power,
@@ -39,9 +38,16 @@ class CommanderTierStep(BaseStep):
             ),
         ]
         decks = map(mtg_parser.parse_deck, sources)
-        cmdrs = flatten(decks)
-        cmdrs = dict(map(lambda c: (c.name, ' '.join(c.tags)), cmdrs))
-        tiers = sorted(set(value for value in cmdrs.values() if value))
-        default = tiers[-1]
+        cards = flatten(decks)
 
-        return cmdrs, tiers, default
+        cmdrs = {}
+        tiers = set()
+        for card in cards:
+            name = cleanup_name(card.name)
+            tier =  ''.join(card.tags)
+            cmdrs[card.name] = tier
+            tiers.add(tier)
+
+        tiers = sorted(tiers)
+
+        return {k: max(9 - tiers.index(v), 0) for k, v in cmdrs.items()}

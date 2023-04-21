@@ -22,4 +22,4 @@ def test_run():
 
     results = run_graph(functions, dependencies)
 
-    return results.get('sum') == 3
+    assert results.get('sum') == 3

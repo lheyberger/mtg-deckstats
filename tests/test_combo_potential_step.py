@@ -68,5 +68,3 @@ def test_slow_load_data(combos):
         combo_list = (c for c in combo_list if set(c['cards']) == set(combo[1:]))
         combo_list = list(combo_list)
         assert len(combo_list) == 1
-
-    return result

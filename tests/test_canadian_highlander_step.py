@@ -41,8 +41,6 @@ def test_load_data(requests_mock, cards):
     for card in cards:
         assert result[card.get('name')] == card.get('score')
 
-    return result
-
 
 @pytest.mark.parametrize('cards, score', [
     [
@@ -80,5 +78,3 @@ def test_slow_load_data(cards):
     assert result
     for card in cards:
         assert result[card.get('name')] > 0
-
-    return result

@@ -61,7 +61,7 @@ def fast_cache():
 @pytest.mark.parametrize('src', sources)
 def test_slow_report_cached(src, slow_cache):
 
-    result = mtg_deckstats.compute(src, data=cache)
+    result = mtg_deckstats.compute(src, data=slow_cache)
 
     assert result
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from multiprocessing.pool import ThreadPool as Pool
+
 from mtg_deckstats.__version__ import __version__
 from mtg_deckstats.graph import run_graph
 from mtg_deckstats.canadian_highlander_step import CanadianHighlanderStep
@@ -68,6 +70,12 @@ def pre_cache():
         ComboPotentialStep,
     ]
 
-    cache = {step.__name__: step.load_data() for step in steps}
+    def load_data(step):
+        return step.__name__, step.load_data()
+
+    with Pool(processes=max(len(steps), 5)) as pool:
+        results = pool.map(load_data, steps)
+
+    cache = dict(results)
     cache['version'] = __version__
     return cache

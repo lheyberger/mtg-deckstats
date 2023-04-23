@@ -55,6 +55,7 @@ def fast_cache():
             return pickle.load(f)
     except:
         pytest.fail(reason='Please follow instructions in CONTRIBUTING.md')
+        return None
 
 
 @pytest.mark.slow

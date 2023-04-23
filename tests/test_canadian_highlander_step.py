@@ -62,7 +62,6 @@ def test_call_no_cache(requests_mock, cards, score):
     assert result['canadian_highlander_score'] == score
 
 
-
 @pytest.mark.slow
 @pytest.mark.parametrize('cards', [
     [

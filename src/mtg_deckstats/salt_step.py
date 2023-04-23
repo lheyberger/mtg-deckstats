@@ -3,9 +3,8 @@
 
 import re
 import itertools
-import requests
 import more_itertools
-from mtg_deckstats.utils import yield_cards
+from mtg_deckstats.utils import yield_cards, requests_get
 from mtg_deckstats.base_step import BaseStep
 
 
@@ -25,8 +24,7 @@ class SaltStep(BaseStep):
     @classmethod
     def load_data(cls):
         cardlists = (
-            requests
-            .get('https://json.edhrec.com/pages/top/salt-2021.json')
+            requests_get('https://json.edhrec.com/pages/top/salt-2021.json')
             .json()
             .get('container', {})
             .get('json_dict', {})

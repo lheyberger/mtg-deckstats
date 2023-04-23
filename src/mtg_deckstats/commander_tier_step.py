@@ -44,8 +44,8 @@ class CommanderTierStep(BaseStep):
         tiers = set()
         for card in cards:
             name = cleanup_name(card.name)
-            tier =  ''.join(card.tags)
-            cmdrs[card.name] = tier
+            tier = ''.join(card.tags)
+            cmdrs[name] = tier
             tiers.add(tier)
 
         tiers = sorted(tiers)

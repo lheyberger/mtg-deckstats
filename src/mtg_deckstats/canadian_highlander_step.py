@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import requests
 from bs4 import BeautifulSoup
-from mtg_deckstats.utils import yield_cards
+from mtg_deckstats.utils import yield_cards, requests_get
 from mtg_deckstats.base_step import BaseStep
 
 
@@ -23,8 +22,7 @@ class CanadianHighlanderStep(BaseStep):
     @classmethod
     def load_data(cls):
         result = (
-            requests
-            .get('https://www.canadianhighlander.ca/points-list/')
+            requests_get('https://www.canadianhighlander.ca/points-list/')
             .text
         )
         soup = BeautifulSoup(result, features='html.parser')

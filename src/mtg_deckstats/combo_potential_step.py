@@ -3,8 +3,8 @@
 
 from functools import reduce
 from operator import itemgetter
-import requests
 from mtg_deckstats.base_step import BaseStep
+from mtg_deckstats.utils import requests_get
 
 
 __all__ = []
@@ -93,8 +93,7 @@ class ComboPotentialStep(BaseStep):
             '?format=tsv&id=1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA&gid=0'
         )
         lines = (
-            requests
-            .get(url)
+            requests_get(url)
             .content
             .decode('utf-8')
             .split('\r\n')

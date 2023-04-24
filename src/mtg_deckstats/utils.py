@@ -19,16 +19,3 @@ def yield_cards(deck):
     for card in deck.get('cards', ()):
         for _ in range(card.get('quantity', 1)):
             yield card
-
-
-def requests_get(url):
-    retry = Retry(
-        total=3,
-        backoff_factor=1,
-        status_forcelist=[429, 500, 502, 503, 504],
-    )
-    adapter = HTTPAdapter(max_retries=retry)
-    session = Session()
-    session.mount("https://", adapter)
-    session.mount("http://", adapter)
-    return session.get(url)

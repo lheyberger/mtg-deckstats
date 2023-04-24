@@ -69,6 +69,11 @@ def test_slow_report_cached(src, slow_cache):
 
 def test_patched_pre_cache(monkeypatch):
 
+    def mock_load_data(step):
+        def inner_load_data(cls, session=None):
+            return step
+        return inner_load_data
+
     steps = [
         'canadian_highlander_step.CanadianHighlanderStep',
         'salt_step.SaltStep',
@@ -79,7 +84,7 @@ def test_patched_pre_cache(monkeypatch):
     for step in steps:
         monkeypatch.setattr(
             f'mtg_deckstats.{step}.load_data',
-            lambda step=step: step
+            mock_load_data(step),
         )
 
     result = mtg_deckstats.pre_cache()

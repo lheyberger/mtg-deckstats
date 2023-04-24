@@ -3,17 +3,20 @@
 
 from functools import reduce
 from operator import itemgetter
-from mtg_deckstats.base_step import BaseStep
-from mtg_deckstats.utils import requests_get
+import requests
 
 
 __all__ = []
 
 
-class ComboPotentialStep(BaseStep):
+class ComboPotentialStep():
+
+    def __init__(self, data: dict = None, session=None):
+        self._data = (data or {}).get(self.__class__.__name__)
+        self._session = session
 
     def __call__(self, deck):
-        combo_list = self.data or self.load_data()
+        combo_list = self._data or self.load_data(self._session)
 
         cards = deck.get('cards', [])
         card_names = set(card.get('name') for card in cards)
@@ -86,14 +89,16 @@ class ComboPotentialStep(BaseStep):
         return max(combo_levels, default=0)
 
     @classmethod
-    def load_data(cls):
+    def load_data(cls, session=None):
+        session = session or requests
         url = (
             'https://docs.google.com/spreadsheets/d/'
             '1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/export'
             '?format=tsv&id=1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA&gid=0'
         )
         lines = (
-            requests_get(url)
+            session
+            .get(url)
             .content
             .decode('utf-8')
             .split('\r\n')

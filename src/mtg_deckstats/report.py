@@ -3,6 +3,8 @@
 
 from multiprocessing.pool import ThreadPool as Pool
 
+import requests
+
 from mtg_deckstats.__version__ import __version__
 from mtg_deckstats.graph import run_graph
 from mtg_deckstats.canadian_highlander_step import CanadianHighlanderStep
@@ -20,16 +22,21 @@ from mtg_deckstats.salt_step import SaltStep
 __all__ = ['compute', 'pre_cache']
 
 
-def compute(src: str, data: dict = None) -> dict:
+def compute(src: str, data: dict = None, session=None) -> dict:
+    session = session or requests
+    context = {
+        'data': data,
+        'session': session,
+    }
     functions = {
-        'parse_deck': ParseDeckStep(src),
+        'parse_deck': ParseDeckStep(src, session=session),
         'mana_value': ManaValueStep(),
         'rarity': RarityStep(),
-        'canadian_highlander': CanadianHighlanderStep(data=data),
-        'salt': SaltStep(data=data),
-        'commander_tier': CommanderTierStep(data=data),
-        'deck_composition': DeckCompositionStep(data=data),
-        'combo_potential': ComboPotentialStep(data=data),
+        'canadian_highlander': CanadianHighlanderStep(**context),
+        'salt': SaltStep(**context),
+        'commander_tier': CommanderTierStep(**context),
+        'deck_composition': DeckCompositionStep(**context),
+        'combo_potential': ComboPotentialStep(**context),
         'mana_producers': ManaProducersStep(),
         'create_report': CreateReportStep(),
     }
@@ -61,7 +68,8 @@ def compute(src: str, data: dict = None) -> dict:
     return {'src': src, **result}
 
 
-def pre_cache():
+def pre_cache(session=None):
+    session = session or requests
     steps = [
         CanadianHighlanderStep,
         SaltStep,
@@ -71,7 +79,7 @@ def pre_cache():
     ]
 
     def load_data(step):
-        return step.__name__, step.load_data()
+        return step.__name__, step.load_data(session)
 
     with Pool(processes=max(len(steps), 5)) as pool:
         results = pool.map(load_data, steps)

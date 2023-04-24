@@ -1,17 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import requests
 import mtg_parser
-from mtg_deckstats.base_step import BaseStep
 
 
 __all__ = []
 
 
-class DeckCompositionStep(BaseStep):
+class DeckCompositionStep():
+
+    def __init__(self, data: dict = None, session=None):
+        self._data = (data or {}).get(self.__class__.__name__)
+        self._session = session
 
     def __call__(self, deck):
-        categories = self.data or self.load_data()
+        categories = self._data or self.load_data(self._session)
         card_names = set(c.get('name') for c in deck.get('cards', []))
 
         def how_many(category):
@@ -26,7 +30,8 @@ class DeckCompositionStep(BaseStep):
         }
 
     @classmethod
-    def load_data(cls):
+    def load_data(cls, session=None):
+        session = session or requests
         sources = {
             'board_wipes':
                 'https://tappedout.net/mtg-decks/mh-mass-answers/',
@@ -40,6 +45,6 @@ class DeckCompositionStep(BaseStep):
                 'https://tappedout.net/mtg-decks/mh-tutors/',
         }
         return {
-            cat: set(card.name for card in mtg_parser.parse_deck(src))
+            cat: set(card.name for card in mtg_parser.parse_deck(src, session))
             for cat, src in sources.items()
         }

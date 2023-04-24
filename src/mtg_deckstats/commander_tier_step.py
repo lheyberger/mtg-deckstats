@@ -1,32 +1,35 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import requests
 import mtg_parser
 from more_itertools import flatten
 from mtg_deckstats.utils import cleanup_name
-from mtg_deckstats.base_step import BaseStep
 
 
 __all__ = []
 
 
-class CommanderTierStep(BaseStep):
+class CommanderTierStep():
+
+    def __init__(self, data: dict = None, session=None):
+        self._data = (data or {}).get(self.__class__.__name__)
+        self._session = session
 
     def __call__(self, deck):
-        cmdrs = self.data or self.load_data()
-
+        cmdrs = self._data or self.load_data(self._session)
         cards = deck.get('cards', [])
         commanders = filter(lambda c: 'commander' in c.get('tags', ()), cards)
         names = map(lambda c: cleanup_name(c.get('name')), commanders)
         powers = map(lambda name: cmdrs.get(name, 0), names)
         power = max(powers)
-
         return {
             'commander_power_tier': power,
         }
 
     @classmethod
-    def load_data(cls):
+    def load_data(cls, session=None):
+        session = session or requests
         sources = [
             (
                 'https://tappedout.net/'
@@ -37,7 +40,8 @@ class CommanderTierStep(BaseStep):
                 'mtg-decks/best-commanders-in-edh-tier-list-part-2/'
             ),
         ]
-        decks = map(mtg_parser.parse_deck, sources)
+
+        decks = (mtg_parser.parse_deck(src, session) for src in sources)
         cards = flatten(decks)
 
         cmdrs = {}

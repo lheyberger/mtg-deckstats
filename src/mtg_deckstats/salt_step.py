@@ -3,18 +3,22 @@
 
 import re
 import itertools
+import requests
 import more_itertools
-from mtg_deckstats.utils import yield_cards, requests_get
-from mtg_deckstats.base_step import BaseStep
+from mtg_deckstats.utils import yield_cards
 
 
 __all__ = []
 
 
-class SaltStep(BaseStep):
+class SaltStep():
+
+    def __init__(self, data: dict = None, session=None):
+        self._data = (data or {}).get(self.__class__.__name__)
+        self._session = session
 
     def __call__(self, deck):
-        salt_score = self.data or self.load_data()
+        salt_score = self._data or self.load_data(self._session)
         card_names = [card.get('name') for card in yield_cards(deck)]
         score = sum(v for k, v in salt_score.items() if k in card_names)
         return {
@@ -22,9 +26,11 @@ class SaltStep(BaseStep):
         }
 
     @classmethod
-    def load_data(cls):
+    def load_data(cls, session=None):
+        session = session or requests
         cardlists = (
-            requests_get('https://json.edhrec.com/pages/top/salt-2021.json')
+            session
+            .get('https://json.edhrec.com/pages/top/salt-2021.json')
             .json()
             .get('container', {})
             .get('json_dict', {})

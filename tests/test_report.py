@@ -43,16 +43,16 @@ sources = [
 ]
 
 
-@pytest.fixture(scope='module')
-def slow_cache():
+@pytest.fixture(name='slow_cache', scope='module')
+def slow_cache_fixture():
     return mtg_deckstats.pre_cache()
 
 
-@pytest.fixture(scope='module')
-def fast_cache():
+@pytest.fixture(name='fast_cache', scope='module')
+def fast_cache_fixture():
     try:
-        with open('tests/mocks/pre_cache.pkl', 'rb') as f:
-            return pickle.load(f)
+        with open('tests/mocks/pre_cache.pkl', 'rb') as cache_file:
+            return pickle.load(cache_file)
     except:
         pytest.fail(reason='Please follow instructions in CONTRIBUTING.md')
         return None

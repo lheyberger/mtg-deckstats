@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from requests import Session
-from requests.adapters import HTTPAdapter, Retry
-
-
 __all__ = []
 
 
